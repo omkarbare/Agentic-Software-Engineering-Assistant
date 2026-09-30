@@ -1,0 +1,43 @@
+services:
+  api:
+    build: .
+    ports: ["127.0.0.1:8000:8000"]
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      MODEL_NAME: ${MODEL_NAME:-gpt-4o-mini}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      DATABASE_PATH: /data/agent.sqlite3
+      WORKSPACE_ROOT: /workspaces
+      EXECUTOR_MODE: ${EXECUTOR_MODE:-disabled}
+      CHECKPOINTER_BACKEND: ${CHECKPOINTER_BACKEND:-sqlite}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://agent:${POSTGRES_PASSWORD:-local-development-only}@postgres:5432/agent}
+      SANDBOX_IMAGE: ${SANDBOX_IMAGE:-langgraph-agent-sandbox:latest}
+      MCP_CONFIG_PATH: /app/config/mcp_servers.yaml
+    volumes:
+      - agent-data:/data
+      - ./workspaces:/workspaces:rw
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    networks: [agent]
+  postgres:
+    image: postgres:16-alpine
+    profiles: [postgres]
+    environment:
+      POSTGRES_USER: agent
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+      POSTGRES_DB: agent
+    volumes: [postgres-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent -d agent"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [agent]
+networks:
+  agent:
+    driver: bridge
+volumes:
+  agent-data:
+  postgres-data:

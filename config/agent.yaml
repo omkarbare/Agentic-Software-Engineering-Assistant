@@ -1,0 +1,7 @@
+model: gpt-4o-mini
+temperature: 0
+max_iterations: 12
+executor_mode: disabled
+checkpointer: sqlite
+max_tokens: 40000
+max_cost_usd: 2.0

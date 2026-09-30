@@ -1,0 +1,6 @@
+max_file_bytes: 1000000
+max_patch_bytes: 100000
+max_command_seconds: 300
+require_approval_for: [patch, command, mcp]
+denied_paths: [.env, .git, .ssh, .aws, .azure]
+network_enabled: false

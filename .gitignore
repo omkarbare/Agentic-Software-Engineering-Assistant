@@ -1,0 +1,13 @@
+.env
+.DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.py[cod]
+*.sqlite3
+data/
+.deepeval/
+dist/
+build/

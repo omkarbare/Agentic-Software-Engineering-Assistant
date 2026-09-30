@@ -1,0 +1,28 @@
+servers:
+  demo:
+    enabled: false
+    transport: stdio
+    command: ["python", "-m", "mcp_servers.demo_server"]
+    tool_allowlist: [get_project_conventions, lookup_dependency_docs, search_internal_docs]
+    tool_schemas:
+      lookup_dependency_docs:
+        type: object
+        properties:
+          package: {type: string}
+        required: [package]
+      search_internal_docs:
+        type: object
+        properties:
+          query: {type: string}
+        required: [query]
+      get_project_conventions:
+        type: object
+        properties: {}
+        required: []
+    timeout_seconds: 5
+  github:
+    enabled: false
+    transport: streamable_http
+    url: "https://api.githubcopilot.com/mcp/"
+    host_allowlist: [api.githubcopilot.com]
+    tool_allowlist: []
